@@ -1,0 +1,29 @@
+{
+  "name": "blog-domain-challenge-2",
+  "version": "1.0.0",
+  "description": "## Learning Objectives",
+  "main": "index.js",
+  "prisma": {
+    "seed": "node prisma/seed.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hannah68/blog-domain-challenge-2.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hannah68/blog-domain-challenge-2/issues"
+  },
+  "homepage": "https://github.com/hannah68/blog-domain-challenge-2#readme",
+  "devDependencies": {
+    "prisma": "^3.9.1"
+  },
+  "dependencies": {
+    "@prisma/client": "^3.9.1"
+  }
+}
