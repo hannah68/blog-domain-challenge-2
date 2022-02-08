@@ -2,8 +2,8 @@ const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient();
 
 async function seed(){
-    await createUser();
-    await createProfile();
+    const user = await createUser();
+    await createProfile(user);
     await createPosts();
     await createComments();
     await createCategories();
@@ -24,13 +24,18 @@ async function createUser () {
 }
 
 // create a profile=======================
-async function createProfile () {
+async function createProfile (user) {
     const profile = await prisma.profile.create({
         data: {
             firstName: "hannah",
             lastName: "naderi",
             age: 32,
-            pictureUrl: "http://www.hanahpic.com"
+            pictureUrl: "http://www.hanahpic.com",
+            user: {
+                connect: {
+                    id: user.id
+                }
+            }
         }
     })
     console.log("profile created", profile);
