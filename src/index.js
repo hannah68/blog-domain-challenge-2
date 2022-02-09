@@ -17,9 +17,11 @@ app.use(express.urlencoded({ extended: true }));
 
 // routes=====================================
 const userRouter = require("./routers/user");
+const postRouter = require("./routers/post");
 
 // use routes=================================
 app.use("/user", userRouter);
+app.use("/user/post", postRouter)
 
 
 // Set up a default "catch all" route to use when someone visits a route that I haven't built==================================

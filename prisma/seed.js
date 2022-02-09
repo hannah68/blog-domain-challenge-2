@@ -4,9 +4,9 @@ const prisma = new PrismaClient();
 async function seed(){
     const user = await createUser();
     await createProfile(user);
-    await createPosts();
     await createComments();
-    await createCategories();
+    const categories = await createCategories();
+    await createPosts(user, categories);
     process.exit(0);
 }
 
@@ -43,7 +43,8 @@ async function createProfile (user) {
 }
 
 // create post==================
-async function createPosts () {
+async function createPosts (user, categories) {
+    
     const initialPosts = [
         {
             title: "How did I change my career?",
@@ -59,12 +60,36 @@ async function createPosts () {
         }
     ];
 
-    const posts = [];
-    for(const post of initialPosts){
-        const eachPost = await prisma.post.create({
-            data: post
-        });
-        posts.push(eachPost);
+    const posts = []; 
+    for(let i = 0; i < initialPosts.length; i++){
+        for(let category of categories){
+            const eachPost = await prisma.post.create({
+                data: {
+                    title: initialPosts[i].title,
+                    content: initialPosts[i].content,
+                    imageUrl: initialPosts[i].imageUrl,
+                    publishedAt: initialPosts[i].publishedAt,
+                    user: {
+                        connect: {
+                            id: user.id
+                        }
+                    },
+                    categories: {
+                        create: [
+                            {
+                                category: {
+                                    connect: {
+                                        id: category.id,
+                                    },
+                                },
+                            },
+                        ],
+                    },
+                },
+            });
+            posts.push(eachPost);
+        }
+        
     }
     console.log("post created", posts);
     return posts;
@@ -90,8 +115,7 @@ async function createComments () {
 // create categories======================
 async function createCategories () {
     const initialCategories = [
-        {name: "career"},
-        {name: "web developer"}
+        {name: "career"}
     ]
     const categories = [];
     for(const category of initialCategories){

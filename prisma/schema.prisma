@@ -19,6 +19,7 @@ model User {
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
   profile     Profile?
+  posts       Post[]
 }
 
 model Profile {
@@ -41,6 +42,9 @@ model Post {
   content     String
   imageUrl    String
   publishedAt DateTime?
+  user        User     @relation(fields: [userId], references: [id])
+  userId      Int
+  categories  CategoriesOnPosts[]
 }
 
 model Comment {
@@ -56,6 +60,15 @@ model Category {
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
   name        String    @unique
+  posts       CategoriesOnPosts[]
+}
+
+model CategoriesOnPosts {
+  id          Int       @id @default(autoincrement())
+  post        Post      @relation(fields: [postId], references: [id])
+  postId     Int
+  category    Category   @relation(fields: [categoryId], references: [id])
+  categoryId  Int
 }
 
 
