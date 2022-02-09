@@ -1,12 +1,13 @@
-const { PrismaClient } = require('@prisma/client')
+const { PrismaClient } = require('@prisma/client');
+const { user } = require('../src/utils/prisma');
 const prisma = new PrismaClient();
 
 async function seed(){
     const user = await createUser();
     await createProfile(user);
-    await createComments();
     const categories = await createCategories();
-    await createPosts(user, categories);
+    const posts = await createPosts(user, categories);
+    await createComments(user, posts);
     process.exit(0);
 }
 
@@ -96,7 +97,7 @@ async function createPosts (user, categories) {
 }
 
 // create comments=========================
-async function createComments () {
+async function createComments (user, posts) {
     const initialComments = [
         {content: "I agee with you"},
         {content: "I love your post"}
@@ -104,7 +105,20 @@ async function createComments () {
     const comments = [];
     for(const comment of initialComments){
         const eachComment = await prisma.comment.create({
-            data: comment
+            data: {
+                content: comment.content,
+                user: {
+                    connect: {
+                        id: user.id
+                    }
+                },
+                post: {
+                    connect: {
+                        id: posts[0].id
+                    }
+                }
+
+            }
         });
         comments.push(eachComment);
     }
