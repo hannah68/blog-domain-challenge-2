@@ -22,7 +22,7 @@ const commentRouter = require("./routers/comment");
 
 // use routes=================================
 app.use("/user", userRouter);
-app.use("/user/post", postRouter);
+app.use("/post", postRouter);
 app.use("/post/:id/comment", commentRouter);
 
 

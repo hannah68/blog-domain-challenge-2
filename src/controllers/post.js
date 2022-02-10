@@ -40,6 +40,49 @@ const createPost = async (req,res) => {
     return res.json({data: post});
 }
 
+// get limited posts for a specific user by username or id and order it
+const getpostsByUser = async (req, res) => {
+    const { user } = req.params;
+
+    let num = parseInt(user);
+    let userIdValue;
+    if(num){
+        userIdValue = num
+    }
+    // get username and find the id
+    if(isNaN(num)){
+        const userId = getUserName(user);
+        userIdValue = userId
+    }
+   
+
+    const post = await prisma.post.findMany({
+        take: 5,
+        orderBy:{
+            createdAt: "desc"
+        },
+        where: {
+            userId: userIdValue
+        },
+        include: {
+            categories: true,
+            comments: true
+        }
+    })
+    return res.json({data: post})
+}
+
+
+const getUserName = async (user) => {
+    const userObj = await prisma.user.findUnique({
+        where: {
+            username: user
+        }
+    })
+    return userObj.id;
+}
+
 module.exports = {
-    createPost
+    createPost,
+    getpostsByUser
 }
