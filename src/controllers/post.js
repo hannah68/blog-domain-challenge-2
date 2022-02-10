@@ -82,7 +82,48 @@ const getUserName = async (user) => {
     return userObj.id;
 }
 
+// update post==================================
+const updatePost = async (req, res) => {
+    const { id } = req.params;
+    const { title, content, imageUrl, categories } = req.body;
+    
+    const updatedPostInfo = {
+        title,
+        content,
+        imageUrl,
+    }
+    
+    const post = await prisma.post.update({
+        where: {
+            id: parseInt(id)
+        },
+        data: {
+            ...updatedPostInfo,
+            categories: {
+                create: categories.map(category => { 
+                    return {
+                        category: {
+                            connectOrCreate: {
+                                where: { name: category.name },
+                                create: { name: category.name }
+                            }
+                        }
+                    }
+                })
+            }
+        },
+        include: {
+            categories: true
+        }
+    })
+    return res.json({data: post});
+}
+
+
+
+
 module.exports = {
     createPost,
-    getpostsByUser
+    getpostsByUser,
+    updatePost
 }

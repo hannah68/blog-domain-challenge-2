@@ -39,9 +39,49 @@ const createUserWithProfile = async(username, email, password, profile) => {
             profile: true
         }
     })
-
 } 
 
+// update user===================================
+const updateUser = async(req, res) => {
+    const { id } = req.params;
+    const {username, email, password, profile} = req.body;
+    const { firstName, lastName, age, pictureUrl} = profile;
+    
+    const userObj = {
+        username,
+        email,
+        password
+    }
+    const profileObj = {
+        firstName,
+        lastName,
+        age,
+        pictureUrl
+    }
+   
+    const user = await prisma.user.update({
+        where: {
+            id: parseInt(id)
+        },
+        data: {
+            ...userObj,
+            profile: {
+                update: {
+                    ...profileObj
+                }
+            }
+        },
+        include: {
+            profile: true
+        }
+    })
+    return res.json({data: user});
+}
+
+
+
 module.exports = {
-    createUser
+    createUser,
+    updateUser,
+    updateProfile
 }
