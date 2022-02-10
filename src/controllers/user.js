@@ -46,7 +46,6 @@ const updateUser = async(req, res) => {
     const { id } = req.params;
     const {username, email, password, profile} = req.body;
     const { firstName, lastName, age, pictureUrl} = profile;
-    
     const userObj = {
         username,
         email,
@@ -79,6 +78,29 @@ const updateUser = async(req, res) => {
 }
 
 
+// update profile==============================
+const updateProfile = async(req, res) => {
+    const { id } = req.params;
+    const { firstName, lastName, age, pictureUrl} = req.body;
+    
+    const profileInfo = {
+        firstName, 
+        lastName,
+        age,
+        pictureUrl
+    };
+    
+
+    const profile = await prisma.profile.update({
+        where: {
+            id: parseInt(id)
+        },
+        data: {
+            ...profileInfo
+        }
+    })
+    return res.json({data: profile});
+}
 
 module.exports = {
     createUser,

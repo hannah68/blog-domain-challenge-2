@@ -19,7 +19,7 @@ const createPost = async (req,res) => {
                             }
                         }
                     }
-                })
+                }),
             },
             user: {
                 connect: {
@@ -100,6 +100,7 @@ const updatePost = async (req, res) => {
         data: {
             ...updatedPostInfo,
             categories: {
+                deleteMany: {},
                 create: categories.map(category => { 
                     return {
                         category: {
@@ -109,7 +110,7 @@ const updatePost = async (req, res) => {
                             }
                         }
                     }
-                })
+                }),
             }
         },
         include: {
@@ -120,10 +121,18 @@ const updatePost = async (req, res) => {
 }
 
 
+// delete posts=================================
+const deletePosts = async(req, res) => {
+    const  { id } = req.params;
+    
+}
+
+
 
 
 module.exports = {
     createPost,
     getpostsByUser,
-    updatePost
+    updatePost,
+    deletePosts
 }
