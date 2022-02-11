@@ -40,6 +40,7 @@ const createPost = async (req,res) => {
     return res.json({data: post});
 }
 
+
 // get limited posts for a specific user by username or id and order it
 const getpostsByUser = async (req, res) => {
     const { user } = req.params;
@@ -181,6 +182,16 @@ const deleteComments = async (req, res) => {
 }
 
 
+// get all posts that are not published======================
+const getAllPosts = async (req, res) => {
+    const post = await prisma.post.findMany({
+        where: {
+            publishedAt: null
+        }
+    })
+    return res.json({data: post})
+}
+
 
 module.exports = {
     createPost,
@@ -188,5 +199,6 @@ module.exports = {
     updatePost,
     deletePosts,
     updateComment,
-    deleteComments
+    deleteComments,
+    getAllPosts
 }

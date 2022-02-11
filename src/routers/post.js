@@ -6,11 +6,13 @@ const {
     updatePost,
     deletePosts,
     updateComment,
-    deleteComments
+    deleteComments,
+    getAllPosts
 } = require("../controllers/post");
 
 router.post("/", createPost);
 
+router.get("/", getAllPosts);
 router.get("/user/:user", getpostsByUser);
 
 router.put("/:id", updatePost);
