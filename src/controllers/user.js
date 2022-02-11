@@ -102,8 +102,27 @@ const updateProfile = async(req, res) => {
     return res.json({data: profile});
 }
 
+// delete user with its comments and posts====================
+const deleteUser = async(req, res) => {
+    const { userId } = req.params;
+   
+    const user = await prisma.user.delete({
+        where: {
+            id: parseInt(userId)
+        },
+        include: {
+            profile: true,
+            posts: true,
+            comments: true
+        }
+    })
+    console.log({data: user});
+    return res.json({data: user})
+}
+
 module.exports = {
     createUser,
     updateUser,
-    updateProfile
+    updateProfile,
+    deleteUser
 }

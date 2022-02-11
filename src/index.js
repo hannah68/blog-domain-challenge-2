@@ -23,7 +23,7 @@ const commentRouter = require("./routers/comment");
 // use routes=================================
 app.use("/user", userRouter);
 app.use("/post", postRouter);
-app.use("/post/:id/comment", commentRouter);
+app.use("/comment", commentRouter);
 
 
 // Set up a default "catch all" route to use when someone visits a route that I haven't built==================================

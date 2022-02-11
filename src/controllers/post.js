@@ -55,7 +55,6 @@ const getpostsByUser = async (req, res) => {
         userIdValue = userId
     }
    
-
     const post = await prisma.post.findMany({
         take: 5,
         orderBy:{
@@ -80,6 +79,22 @@ const getUserName = async (user) => {
         }
     })
     return userObj.id;
+}
+
+// update comment============================
+const updateComment = async(req, res) => {
+    const { commentId } = req.params;
+    const { content } = req.body;
+
+    const comment = await prisma.comment.update({
+        where: {
+            id: parseInt(commentId)
+        },
+        data: {
+            content
+        }
+    })
+    return res.json({data: comment});
 }
 
 // update post==================================
@@ -124,9 +139,46 @@ const updatePost = async (req, res) => {
 // delete posts=================================
 const deletePosts = async(req, res) => {
     const  { id } = req.params;
-    
+    const post = await prisma.post.delete({
+        where: {
+            id: parseInt(id),
+        },
+        select: {
+            title: true,
+        },
+    })
+    return res.json({data: post});
 }
 
+// delete comments==================================
+const deleteComments = async (req, res) => {
+    const { commentId } = req.params;
+
+    const findedComment = await prisma.comment.findUnique({
+        where: {
+            id: parseInt(commentId)
+        }
+    })
+    // console.log(findedComment);
+    if(!findedComment.parentId){
+        const comment = await prisma.comment.delete({
+            where: {
+                id: parseInt(commentId)
+            }
+        });
+        return res.json({data: comment})
+    }
+
+    const comment = await prisma.comment.update({
+        where: {
+            id: parseInt(commentId)
+        },
+        data: {
+            content: "[removed]"
+        }
+    });
+    return res.json({data: comment});
+}
 
 
 
@@ -134,5 +186,7 @@ module.exports = {
     createPost,
     getpostsByUser,
     updatePost,
-    deletePosts
+    deletePosts,
+    updateComment,
+    deleteComments
 }

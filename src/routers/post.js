@@ -4,11 +4,19 @@ const {
     createPost,
     getpostsByUser,
     updatePost,
-    deletePosts
+    deletePosts,
+    updateComment,
+    deleteComments
 } = require("../controllers/post");
 
 router.post("/", createPost);
+
 router.get("/user/:user", getpostsByUser);
+
 router.put("/:id", updatePost);
 router.delete("/:id", deletePosts)
+
+router.put("/:id/comment/:commentId", updateComment);
+router.delete("/:id/comment/:commentId", deleteComments);
+
 module.exports = router;
